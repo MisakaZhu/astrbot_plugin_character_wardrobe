@@ -1,0 +1,134 @@
+{
+  "max_items_per_role": {
+    "description": "每角色衣服件数上限",
+    "hint": "硬上限 200；达到上限后拒绝新添，查询/编辑仍可用。不允许配置为无限。",
+    "type": "int",
+    "default": 200
+  },
+  "max_image_bytes_mb": {
+    "description": "单张图片原始读取上限（MiB）",
+    "hint": "硬上限 10；流式读取超限立即中止，不落库。",
+    "type": "int",
+    "default": 10
+  },
+  "max_megapixels": {
+    "description": "解码像素上限（百万像素）",
+    "hint": "硬上限 20；解码前后均核验。",
+    "type": "int",
+    "default": 20
+  },
+  "max_long_edge": {
+    "description": "图片最长边上限（像素）",
+    "hint": "硬上限 8192。",
+    "type": "int",
+    "default": 8192
+  },
+  "image_concurrency": {
+    "description": "图像处理并发数",
+    "hint": "1-8，默认 2；共享有界闸门的工人数，队列满时在读取图片数据前返回繁忙。",
+    "type": "int",
+    "default": 2
+  },
+  "image_queue_capacity": {
+    "description": "图像/下载共享等待队列上限",
+    "hint": "0-64，默认 8；0 表示不排队、工人满时立即繁忙拒绝；满时在读取任何图片字节前拒绝。",
+    "type": "int",
+    "default": 8
+  },
+  "download_concurrency": {
+    "description": "并发下载数",
+    "hint": "1-8，默认 2；共享下载闸门工人数（不再每次请求新建信号量）。",
+    "type": "int",
+    "default": 2
+  },
+  "pending_image_budget_mb": {
+    "description": "暂存中图片的待提交预算（MiB）",
+    "hint": "4-512，默认 64；进程内计数（单进程边界），按请求预留记账（释放只作用于自身预留），处理中图片合计超限时拒绝新请求，失败/取消即释放。",
+    "type": "int",
+    "default": 64
+  },
+  "max_images_per_request": {
+    "description": "每请求图片数量上限",
+    "hint": "1-16，默认 8；单次添加最多附带的图片张数（与全服务待提交预算分开核算）。",
+    "type": "int",
+    "default": 8
+  },
+  "per_request_processed_budget_mb": {
+    "description": "每请求重编码输出总额（MiB）",
+    "hint": "1-128，默认 32；按重编码后的实际输出字节核算，超出整批拒绝（与待提交预算、每角色总额分开）。",
+    "type": "int",
+    "default": 32
+  },
+  "role_image_budget_mb": {
+    "description": "每角色图片总额（MiB）",
+    "hint": "默认 200，硬上限 2048；超限拒绝新图片，文字服装不受影响。",
+    "type": "int",
+    "default": 200
+  },
+  "manual_lock_minutes": {
+    "description": "手工穿搭锁时长（分钟）",
+    "hint": "0 表示手工选穿不落锁；AI 选穿在锁生效期间始终被拒绝。硬上限 1440。",
+    "type": "int",
+    "default": 30
+  },
+  "download_timeout_s": {
+    "description": "远程图片下载超时（秒）",
+    "hint": "5-60，默认 15；超时取消并回收临时状态。",
+    "type": "int",
+    "default": 15
+  },
+  "allow_reply_image": {
+    "description": "允许引用（回复）消息中的图片",
+    "hint": "默认关闭。仅当你确认所用平台适配器会原样转发引用消息的图片附件时再开启。",
+    "type": "bool",
+    "default": false
+  },
+  "autonomy_add_enabled": {
+    "description": "角色自主添衣默认开关",
+    "hint": "作为新角色 autonomy_state 的初始值落库；后续以 /衣柜 自主 命令的显式设置为准。",
+    "type": "bool",
+    "default": true
+  },
+  "autonomy_wear_enabled": {
+    "description": "角色自主选穿默认开关",
+    "hint": "作为新角色 autonomy_state 的初始值落库；后续以 /衣柜 自主 命令的显式设置为准。",
+    "type": "bool",
+    "default": true
+  },
+  "autonomy_daily_add_limit": {
+    "description": "每角色 UTC 日自主添衣上限（件）",
+    "hint": "1-50，默认 5；持久计数，重启不重置，跨 UTC 日自然恢复。",
+    "type": "int",
+    "default": 5
+  },
+  "autonomy_cooldown_seconds": {
+    "description": "自主添衣冷却（秒）",
+    "hint": "0-3600，默认 60；两次自主添衣实际提交的最小间隔，按服务器 UTC 时间计。",
+    "type": "int",
+    "default": 60
+  },
+  "autonomy_projection_max_items": {
+    "description": "临时投影最多条目数",
+    "hint": "1-20，默认 8；超出按稳定顺序截断并标注，不全量塞入库存。",
+    "type": "int",
+    "default": 8
+  },
+  "autonomy_projection_max_chars": {
+    "description": "临时投影总字符上限",
+    "hint": "200-8000，默认 2000；确定性截断并标注。",
+    "type": "int",
+    "default": 2000
+  },
+  "autonomy_handle_max": {
+    "description": "一轮公开给模型的可信图片句柄数量上限",
+    "hint": "0-16，默认 4；0 表示本轮不提供句柄（仅文字添衣）。",
+    "type": "int",
+    "default": 4
+  },
+  "trusted_media_roots": {
+    "description": "可信本地媒体根目录列表（可选）",
+    "hint": "仅当图片以本地路径出现时，允许读取这些根目录内的文件；默认为空，只信任插件自身数据目录。",
+    "type": "list",
+    "default": []
+  }
+}

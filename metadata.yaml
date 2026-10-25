@@ -1,0 +1,6 @@
+name: astrbot_plugin_character_wardrobe
+display_name: 角色小衣柜
+version: 0.1.0
+description: 为角色建立可共享的持久衣柜：衣服与参考图、当前穿搭、跨窗口权限与安全图片入库（首版核心）
+author: MisakaZhu
+repo: ""
